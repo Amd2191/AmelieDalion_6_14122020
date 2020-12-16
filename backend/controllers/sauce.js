@@ -48,8 +48,6 @@ exports.modifySauce = (req, res, next) => {
         }));
 };
 
-
-
 exports.deleteSauce = (req, res, next) => {
     // trouver le produit à supprimer
     Sauce.findOne({
@@ -104,30 +102,38 @@ exports.likeSauce = (req, res, next) => {
             _id: req.params.id
         })
         .then(sauce => {
-            const sauceUsersLikes = sauce.usersLikes;
-            const sauceUsersDislikes = sauce.usersDislikes;
+            const sauceUsersLikes = sauce.usersLiked;
+            const sauceUsersDislikes = sauce.usersDisliked;
             const userLike = req.body.like;
             const userId = req.body.userId;
-            if (userLike === -1 & sauceUsersDislikes.indexof(userId) > 0) {
-                res.status(403).json({
-                    error: error | "Vous avez déjà indiqué que vous n'aimiez pas cette sauce"
-                })
-            }
-            if (userLike === -1 & sauceUsersDislikes.indexof(userId) < 0) {
-                sauce.likes -= 1;
+            console.log(sauce);
+
+            if (userLike === -1 & sauceUsersDislikes.indexOf(userId) < 0) {
+                sauce.dislikes =+ 1;
                 sauceUsersDislikes.push(req.body.userId);
                 res.status(201).json({message:"C'est noté!"});
             }
-            if (userLike === 1 & sauceUsersLikes.indexof(userId) > 0) {
-                res.status(403).json({
-                    error: error | "Vous avez déjà indiqué que vous aimiez cette sauce"
-                })
-            }
-            if (userLike === 1 & sauceUsersLikes.indexof(userId) < 0) {
+
+            if (userLike === 1 & sauceUsersLikes.indexOf(userId) < 0) {
                 sauce.likes =+ 1;
                 sauceUsersLikes.push(req.body.userId);
                 res.status(201).json({message:"C'est noté!"});
             }
+            if(userLike===0 & sauceUsersLikes.indexOf(userId) >= 0 ){
+                sauce.likes-=1;
+                let userIndex=sauceUsersLikes.indexOf(userId);
+                sauceUsersLikes.splice(userIndex,1);
+                res.status(201).json({message:"C'est noté!"});
+            }
+            if(userLike===0 & sauceUsersDislikes.indexOf(userId) >= 0 ){
+                sauce.dislikes-=1;
+                let userIndex=sauceUsersDislikes.indexOf(userId);
+                sauceUsersDislikes.splice(userIndex,1);
+                res.status(201).json({message:"C'est noté!"});
+            }
+            else{}
+            sauce.save();
+            console.log(sauce);
         })
         .catch(error => res.status(404).json({
             error
