@@ -10,7 +10,6 @@ exports.createSauce = (req, res, next) => {
         dislikes: 0,
         usersLiked: [],
         usersDisliked: [],
-        // protocole nom d'hote image et nom du fichier
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
     sauce.save()
@@ -22,13 +21,9 @@ exports.createSauce = (req, res, next) => {
         }));
 };
 
-// pour pouvoir gérer le téléchargement de l'image il faut gérer les deux situations:
 exports.modifySauce = (req, res, next) => {
-    // savoir s'il y a déjà un fichier image
     const sauceObject = req.file ?
-        // S'il existe type objet A et s'il n'existe pas type ojet B
         {
-            // on récupère et modifie l'URL
             ...JSON.parse(req.body.sauce),
             imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
         } : {
@@ -49,18 +44,12 @@ exports.modifySauce = (req, res, next) => {
 };
 
 exports.deleteSauce = (req, res, next) => {
-    // trouver le produit à supprimer
     Sauce.findOne({
             _id: req.params.id
         })
         .then(sauce => {
-            //  récupère l'url on sépare autour de /im/ dans tableau,
-            // on prend donc le deuxième élément du tableau pour avoir le nom du fichier
-            const filename = sauce.imageUrl.split('/images/')[1];
-            // unlink permet de supprimer le fichier,
-            // argument 1 est le chemin du fichier
-            // argument 2 est le callbakc i.e. quoi faire une fois le fichier supprimer
 
+            const filename = sauce.imageUrl.split('/images/')[1];
             fs.unlink(`images/${filename}`, () => {
 
                 Sauce.deleteOne({
