@@ -1,11 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const path=require('path');
+const path = require('path');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
 const app = express();
 
 const sauceRoutes = require('./routes/sauce');
-const userRoutes=require('./routes/user');
+const userRoutes = require('./routes/user');
 
 mongoose.connect('mongodb+srv://dbManager:rQwqSRoQNGShV97L@cluster0.ggoxd.mongodb.net/test?retryWrites=true&w=majority', {
         useNewUrlParser: true,
@@ -14,6 +16,13 @@ mongoose.connect('mongodb+srv://dbManager:rQwqSRoQNGShV97L@cluster0.ggoxd.mongod
     .then(() => console.log('Connexion à MongoDB réussie !'))
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
+app.use(helmet());
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+
+// to remove data unallowed
+app.use(mongoSanitize());
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
@@ -22,10 +31,12 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(bodyParser.json());
+
+
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
+
 
 module.exports = app;
