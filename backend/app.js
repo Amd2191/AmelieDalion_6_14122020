@@ -9,7 +9,7 @@ const app = express();
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
-mongoose.connect('mongodb+srv://dbManager:rQwqSRoQNGShV97L@cluster0.ggoxd.mongodb.net/test?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://Administrator:bat4qbeRDwu0aGFf@cluster0.ggoxd.mongodb.net/test?retryWrites=true&w=majority', {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
