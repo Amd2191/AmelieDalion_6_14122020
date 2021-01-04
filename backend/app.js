@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -9,7 +11,10 @@ const app = express();
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
-mongoose.connect('mongodb+srv://Administrator:bat4qbeRDwu0aGFf@cluster0.ggoxd.mongodb.net/test?retryWrites=true&w=majority', {
+const sqlUser = process.env.SQL_USER;
+const sqlPassword = process.env.SQL_PASSWORD;
+
+mongoose.connect('mongodb+srv://'+sqlUser+':'+sqlPassword+'@cluster0.ggoxd.mongodb.net/test?retryWrites=true&w=majority', {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
