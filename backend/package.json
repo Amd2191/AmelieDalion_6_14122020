@@ -21,7 +21,7 @@
     "maskdata": "^1.1.2",
     "mongoose": "^5.11.7",
     "mongoose-unique-validator": "^2.0.3",
-    "multer": "^1.4.2",
+    "multer": "^2.0.0",
     "sha256": "^0.2.0",
     "validator.js": "^2.0.4"
   }
